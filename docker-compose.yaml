@@ -1,0 +1,26 @@
+version: "3.0"
+services:
+  db_test:
+    container_name: "db_test"
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres_test
+      - POSTGRES_PASSWORD=postgres_test
+      - POSTGRES_DB=postgres_test
+    ports:
+      - "5433:5432"
+    networks:
+      - custom
+  backend:
+    container_name: "web"
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - "db_test"
+    networks:
+      - custom
+networks:
+  custom:
+    driver: bridge
