@@ -1,7 +1,7 @@
 from typing import Generator
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-# from src.settings import DATABASE_URL
+from src.settings import DATABASE_URL
 
 
 engine = create_async_engine(DATABASE_URL, future=True)
