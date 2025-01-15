@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
-library = APIRouter(prefix="")
+library = APIRouter(prefix="/api/ping")
 
-@library.get("/library/")
+@library.get("/")
 async def ping():
     return {"details": "OK"}

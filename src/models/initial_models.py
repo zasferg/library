@@ -11,6 +11,14 @@ class Base(DeclarativeBase):
     pass
 
 
+class BooksGenres(Base):
+
+    __tablename__ = "books_genres"
+    
+    id: Mapped[int] = mapped_column(Integer(), primary_key=True,unique=True,autoincrement=True)
+    books: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("books.id"),nullable=True) 
+    genres: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("genres.id"),nullable=True)
+
 class User(Base):
 
     __tablename__ = "users"
@@ -30,7 +38,7 @@ class Author(Base):
     name: Mapped[str] = mapped_column(String(30),nullable=False)
     biography: Mapped[str] = mapped_column(String(255),)
     birth_date:Mapped[date] = mapped_column(Date())
-    books: Mapped["Book"] = relationship('Book',back_populates='authors')
+    books: Mapped[List["Book"]] = relationship(back_populates='author')
 
 
 class Genre(Base):
@@ -39,7 +47,9 @@ class Genre(Base):
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True,unique=True,default=uuid.uuid4)
     name: Mapped[str] = mapped_column(String(30),nullable=False)
-    books: Mapped[List["Book"]] = relationship('Books',secondary="book_genres",back_populates='genres')
+    books: Mapped[List["Book"]] = relationship('Book', secondary="books_genres", back_populates='genres')
+
+
 
 class Book(Base):
 
@@ -48,22 +58,26 @@ class Book(Base):
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True,unique=True,default=uuid.uuid4)
     name: Mapped[str] = mapped_column(String(30),nullable=False)
     description: Mapped[str] = mapped_column(String(255),nullable=True)
-    publication_date: Mapped[datetime] = mapped_column(DateTime(timezone=True),default='')
+    publication_date: Mapped[datetime] = mapped_column(DateTime(timezone=True),default=datetime.now)
     avaliable_copies: Mapped[int] = mapped_column(Integer(),nullable=True)
-    author: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("authors.id"),nullable=True)
-    genres: Mapped[List["Genre"]] = relationship('Genre',secondary="book_genres",back_populates='books')
+    author_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("authors.id"),nullable=True)
+    author: Mapped["Author"] = relationship("Author",foreign_keys=[author_id],lazy="selectin",back_populates='books')
+    genres: Mapped[List["Genre"]] = relationship('Genre',secondary="books_genres",back_populates='books')
 
 
+class BooksUsers(Base):
 
-class BooksGenres(Base):
+    __tablename__ = "books_users"
 
-    __tablename__ = "books_genres"
-    
     id: Mapped[int] = mapped_column(Integer(), primary_key=True,unique=True,autoincrement=True)
     books: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("books.id"),nullable=True) 
-    genres: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("genres.id"),nullable=True)
+    users: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("users.id"),nullable=True)
 
 
 
 
-     
+
+
+
+
+
