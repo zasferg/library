@@ -1,12 +1,13 @@
 from datetime import date
+from typing import Optional
 from uuid import UUID
 from src.schemas.base import BaseSchema
 
 
 class AuthorSchema(BaseSchema):
-    name: str
-    biography: str
-    birth_date: date
+    name: Optional[str]
+    biography: Optional[str]
+    birth_date: Optional[date]
 
 
 class GetAuthorSchema(AuthorSchema):

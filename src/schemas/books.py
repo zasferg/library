@@ -12,13 +12,11 @@ class BookSchema(BaseSchema):
     avaliable_copies: int | None
 
 
-
 class GetBookSchema(BookSchema):
     id: UUID
     publication_date: datetime
     author: GetAuthorSchema
-    genres: List[GetGenreSchema]
-
+    genres: Optional[List[GetGenreSchema]] 
 
 class CreateBookSchema(BookSchema):
     author: UUID

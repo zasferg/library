@@ -12,9 +12,10 @@ class GetBookGenreSchema(BookGenreSchema):
     id: int
 
 
-class CreateBookGenreSchema(BookGenreSchema):
-    pass
+class CreateBookGenreSchema(BaseSchema):
+    books: str
+    genres: str
 
 
-class UpdateBookGenreSchema(BookGenreSchema):
+class UpdateBookGenreSchema(CreateBookGenreSchema):
     pass
