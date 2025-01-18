@@ -6,7 +6,7 @@ COPY requirements.txt /test_library/requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY src /test_library/src
-#COPY .env /test_library/.env
+COPY /src/.env /test_library/src/.env
 
 ENV PYTHONPATH="${PYTHONPATH}:/test_library/src"
 EXPOSE 8000

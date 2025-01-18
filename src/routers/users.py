@@ -88,7 +88,7 @@ async def get_book(
     try:
         user_id = auth_data["user"].id
 
-        logger.info(f"Пользователь c ID {user_id} пытается удалить книгу {book_data.books}")
+        logger.info(f"Пользователь c ID {user_id} пытается взять книгу {book_data.books}")
 
         get_book = await BookCrud.get_obj_by_param(
             session=session, name=book_data.books, offset=0, limit=10
@@ -133,7 +133,7 @@ async def get_book(
             return_book_date=book_data.return_book_date,
         )
 
-        logger.info(f"Книга{book_data.books} успешно присвоена {user_id}")
+        logger.info(f"Книга{book_data.books} успешно присвоена  польщователь с ID {user_id}")
 
         await BookCrud.update(
             session=session,
