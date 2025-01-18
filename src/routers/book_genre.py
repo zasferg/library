@@ -10,6 +10,7 @@ from src.schemas.book_and_genre import *
 from src.utils.custom_exceptions import AssotiationNotFoundException
 
 
+
 books_genres = APIRouter(
     prefix="/api/books_and_genre_assotiation",
     tags=[
@@ -24,7 +25,9 @@ async def add_genre_to_book(
 ):
     try:
         get_genre = await GenresCrud.get_obj_by_param(session=session, name=data.genres)
-        get_book = await BookCrud.get_obj_by_param(session=session, name=data.books,limit=10,offset=0)
+        get_book = await BookCrud.get_obj_by_param(
+            session=session, name=data.books, limit=10, offset=0
+        )
         if not get_genre or not get_book:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -46,7 +49,9 @@ async def delete_genre_to_book(
 ):
     try:
         get_genre = await GenresCrud.get_obj_by_param(session=session, name=data.genres)
-        get_book = await BookCrud.get_obj_by_param(session=session, name=data.books, limit=10,offset=0)
+        get_book = await BookCrud.get_obj_by_param(
+            session=session, name=data.books, limit=10, offset=0
+        )
 
         if not get_genre or not get_book:
             raise ValueError

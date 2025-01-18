@@ -1,4 +1,4 @@
-from fastapi import APIRouter,Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import JSONResponse
 from database import get_session
 from src.schemas.users import UpdateUserSchema
@@ -7,7 +7,7 @@ from src.crud.books import BookCrud
 from src.crud.user_book import UserBookCrud
 from src.schemas.user_book import CreateBookUsersSchema
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.auth.helpers.check_user import get_active_user
+from src.auth.helpers.check_user import get_active_user, get_superuser_user
 
 
 users = APIRouter(
@@ -16,6 +16,23 @@ users = APIRouter(
         "Users",
     ],
 )
+
+
+@users.get("/all")
+async def get_all_users(
+    auth_data: dict = Depends(get_superuser_user),
+    session: AsyncSession = Depends(get_session),
+):
+    try:
+        result = await UserCrud.get_all(session=session)
+        if not result:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail={"Пользователи не найдены"},
+            )
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
 @users.get("/me")
@@ -67,7 +84,9 @@ async def get_book(
 ):
     try:
         user_id = auth_data["user"].id
-        get_book = await BookCrud.get_obj_by_param(session=session, name=book_data.books,offset=0,limit=10)
+        get_book = await BookCrud.get_obj_by_param(
+            session=session, name=book_data.books, offset=0, limit=10
+        )
 
         if not get_book:
             raise HTTPException(
@@ -90,8 +109,10 @@ async def get_book(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"У данного пользователя больше 5 книг",
             )
-        
-        check_user_have_book = await UserBookCrud.get_filtered_by_param(session=session,books=get_book.id,users=user_id)
+
+        check_user_have_book = await UserBookCrud.get_filtered_by_param(
+            session=session, books=get_book.id, users=user_id
+        )
 
         if len(check_user_have_book) > 0:
             raise HTTPException(
@@ -125,7 +146,9 @@ async def delete_book(
 
         user_id = auth_data["user"].id
 
-        get_book = await BookCrud.get_obj_by_param(session=session, name=book_data,offset=0,limit=10)
+        get_book = await BookCrud.get_obj_by_param(
+            session=session, name=book_data, offset=0, limit=10
+        )
 
         get_book_user_assoiation = await UserBookCrud.get_obj_by_param(
             session=session, books=get_book.id, users=user_id
@@ -145,5 +168,23 @@ async def delete_book(
             content={"details": "Sucessfully deleted"},
         )
 
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+
+
+@users.get("/books_by_param")
+async def get_available_books(
+    auth_data: dict = Depends(get_active_user),
+    session: AsyncSession = Depends(get_session),
+):
+    try:
+        result = await BookCrud.get_all_available_books(
+            session=session,
+        )
+        if not result:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail={"Книги не найдены"}
+            )
+        return result
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))

@@ -12,7 +12,7 @@ from auth.helpers.utils import (
     create_refresh_token,
     get_checked_token_data,
     verify_password,
-    hash_password
+    hash_password,
 )
 
 
@@ -26,8 +26,7 @@ auth = APIRouter(
 
 @auth.post("/registration")
 async def registration_handler(
-    user_data: CreateUserSchema, 
-    session: AsyncSession = Depends(get_session)
+    user_data: CreateUserSchema, session: AsyncSession = Depends(get_session)
 ):
     try:
 
@@ -55,22 +54,24 @@ async def registration_handler(
 
 @auth.post("/login")
 async def registration_handler(
-    user_data: CreateUserSchema, 
-    session: AsyncSession = Depends(get_session)
+    user_data: CreateUserSchema, session: AsyncSession = Depends(get_session)
 ):
     try:
-        get_user = await UserCrud.get_filtered_by_param(session=session,email= user_data.email)
+        get_user = await UserCrud.get_filtered_by_param(
+            session=session, email=user_data.email
+        )
 
         if not get_user:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="Пользователь не зарегистрирован"
-                )
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Пользователь не зарегистрирован",
+            )
 
         if not verify_password(user_data.password, get_user[0].password):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST, detail="Неверный пароль"
-                )
-        
+            )
+
         access_token = create_access_token(data={"user_id": str(get_user[0].id)})
         refresh_token = create_refresh_token(data={"user_id": str(get_user[0].id)})
 
@@ -79,7 +80,7 @@ async def registration_handler(
         )
 
         return {"access_token": access_token, "refresh_token": refresh_token}
-    
+
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 

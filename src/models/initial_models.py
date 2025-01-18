@@ -63,7 +63,7 @@ class User(Base):
         "Token", back_populates="user", lazy="selectin"
     )
     books: Mapped[List["Book"]] = relationship(
-        "Book", secondary="books_users", back_populates="user",lazy="selectin"
+        "Book", secondary="books_users", back_populates="user", lazy="selectin"
     )
 
 
@@ -135,8 +135,8 @@ class Book(Base):
         "Author", foreign_keys=[author_id], lazy="selectin", back_populates="books"
     )
     genres: Mapped[List["Genre"]] = relationship(
-        "Genre", secondary="books_genres", back_populates="books",lazy="selectin"
+        "Genre", secondary="books_genres", back_populates="books", lazy="selectin"
     )
     user: Mapped["User"] = relationship(
-        "User",secondary="books_users",back_populates="books", lazy="selectin"
+        "User", secondary="books_users", back_populates="books", lazy="selectin"
     )

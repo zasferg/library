@@ -34,7 +34,10 @@ async def get_all_books(
 
 @books.get("/get_by_name")
 async def get_book_by_name(
-    name: str, limit: int = 10, offset: int = 0, session: AsyncSession = Depends(get_session)
+    name: str,
+    limit: int = 10,
+    offset: int = 0,
+    session: AsyncSession = Depends(get_session),
 ):
     try:
         result = await BookCrud.get_obj_by_param(

@@ -15,9 +15,7 @@ class BookCrud(BaseCrud):
     @classmethod
     async def get_all(cls, limit, offset, session: AsyncSession) -> List[Schema]:
         result = await session.execute(
-            select(cls.base_model)
-            .limit(limit)
-            .offset(offset)
+            select(cls.base_model).limit(limit).offset(offset)
         )
         obj = result.unique().scalars().all()
         return [cls.get_schema.model_validate(item) for item in obj]
@@ -27,10 +25,7 @@ class BookCrud(BaseCrud):
         cls, limit, offset, session: AsyncSession, **kwargs
     ) -> Schema | None:
         result = await session.execute(
-            select(cls.base_model)
-            .filter_by(**kwargs)
-            .limit(limit)
-            .offset(offset)
+            select(cls.base_model).filter_by(**kwargs).limit(limit).offset(offset)
         )
         obj = result.scalars().first()
         return cls.get_schema.model_validate(obj)
@@ -42,3 +37,26 @@ class BookCrud(BaseCrud):
         await session.commit()
         await session.refresh(instance)
         return instance
+
+    @classmethod
+    async def get_filtered_by_param_and_availability(cls, session, **kwargs):
+        result = await session.execute(
+            select(cls.base_model)
+            .filter_by(**kwargs)
+            .filter(cls.base_model.avaliable_copies > 0)
+        )
+        obj = result.scalars().all()
+        return [cls.get_schema.model_validate(item) for item in obj]
+
+    @classmethod
+    async def get_all_available_books(
+        cls, limit, offset, session: AsyncSession
+    ) -> List[Schema]:
+        result = await session.execute(
+            select(cls.base_model)
+            .filter(cls.base_model.avaliable_copies > 0)
+            .limit(limit)
+            .offset(offset)
+        )
+        obj = result.unique().scalars().all()
+        return [cls.get_schema.model_validate(item) for item in obj]

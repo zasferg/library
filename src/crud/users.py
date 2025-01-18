@@ -8,4 +8,3 @@ class UserCrud(BaseCrud):
     get_schema = GetUserSchema
     create_schema = CreateUserSchema
     update_schema = UpdateUserSchema
-

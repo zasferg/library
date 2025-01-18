@@ -14,7 +14,7 @@ class GetUserSchema(UserSchema):
     id: UUID
     is_active: bool = Field(default=True, exclude=True)
     is_superuser: bool = Field(default=False, exclude=True)
-    books: List[GetBookSchema] 
+    books: List[GetBookSchema]
 
 
 class CreateUserSchema(UserSchema):

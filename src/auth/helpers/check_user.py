@@ -8,14 +8,12 @@ from fastapi import status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 
-
 security = HTTPBearer()
 
 
-
 async def get_active_user(
-    token: Annotated[HTTPAuthorizationCredentials, Depends(security)], 
-    session: AsyncSession = Depends(get_session)
+    token: Annotated[HTTPAuthorizationCredentials, Depends(security)],
+    session: AsyncSession = Depends(get_session),
 ):
     payload = get_token_data(token.credentials)
     user_id = payload.get("user_id")
@@ -32,8 +30,8 @@ async def get_active_user(
 
 
 async def get_superuser_user(
-    token: Annotated[HTTPAuthorizationCredentials, Depends(security)], 
-    session: AsyncSession = Depends(get_session)
+    token: Annotated[HTTPAuthorizationCredentials, Depends(security)],
+    session: AsyncSession = Depends(get_session),
 ):
     print(token)
     payload = get_token_data(token.credentials)

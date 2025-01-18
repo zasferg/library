@@ -16,7 +16,8 @@ class GetBookSchema(BookSchema):
     id: UUID
     publication_date: datetime
     author: GetAuthorSchema
-    genres: Optional[List[GetGenreSchema]] 
+    genres: Optional[List[GetGenreSchema]]
+
 
 class CreateBookSchema(BookSchema):
     author: UUID
