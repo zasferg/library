@@ -16,22 +16,11 @@ class BookCrud(BaseCrud):
     async def get_all(cls, limit, offset, session: AsyncSession) -> List[Schema]:
         result = await session.execute(
             select(cls.base_model)
-            .options(joinedload(cls.base_model.genres))
             .limit(limit)
             .offset(offset)
         )
         obj = result.unique().scalars().all()
         return [cls.get_schema.model_validate(item) for item in obj]
-
-    @classmethod
-    async def get_by_id(cls, session: AsyncSession, id: UUID | int) -> Schema | None:
-        result = await session.execute(
-            select(cls.base_model)
-            .options(joinedload(cls.base_model.genres))
-            .where(cls.base_model.id == id)
-        )
-        obj = result.unique().scalar_one_or_none()
-        return cls.get_schema.model_validate(obj)
 
     @classmethod
     async def get_obj_by_param(

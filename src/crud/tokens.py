@@ -1,5 +1,5 @@
 from src.crud.base import BaseCrud
-from models.initial_models import Token
+from src.models.initial_models import Token
 from src.schemas.tokens import *
 
 

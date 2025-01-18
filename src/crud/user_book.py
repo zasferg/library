@@ -1,5 +1,5 @@
 from src.crud.base import BaseCrud
-from models.initial_models import BooksUsers
+from src.models.initial_models import BooksUsers
 from src.schemas.user_book import *
 
 

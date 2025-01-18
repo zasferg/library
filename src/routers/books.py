@@ -5,7 +5,7 @@ from src.crud.books import BookCrud
 from src.crud.autors import AutorsCrud
 from src.crud.genres import GenresCrud
 from src.crud.book_genre import BookGenreCrud
-from schemas.books import *
+from src.schemas.books import *
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
