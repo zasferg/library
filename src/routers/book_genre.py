@@ -10,7 +10,6 @@ from src.schemas.book_and_genre import *
 from src.utils.custom_exceptions import AssotiationNotFoundException
 
 
-
 books_genres = APIRouter(
     prefix="/api/books_and_genre_assotiation",
     tags=[
@@ -19,7 +18,7 @@ books_genres = APIRouter(
 )
 
 
-@books_genres.post("/add_genre_book_assotiation")
+@books_genres.post("/add")
 async def add_genre_to_book(
     data: CreateBookGenreSchema, session: AsyncSession = Depends(get_session)
 ):
@@ -43,7 +42,7 @@ async def add_genre_to_book(
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
-@books_genres.post("/delete_genre_book_assotiation")
+@books_genres.post("/delete")
 async def delete_genre_to_book(
     data: CreateBookGenreSchema, session: AsyncSession = Depends(get_session)
 ):

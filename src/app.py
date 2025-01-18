@@ -10,10 +10,30 @@ from src.auth.helpers.check_user import get_superuser_user
 
 app = FastAPI()
 
-app.include_router(books, dependencies=[Depends(get_superuser_user),])
-app.include_router(autors, dependencies=[Depends(get_superuser_user),])
-app.include_router(genres, dependencies=[Depends(get_superuser_user),])
-app.include_router(books_genres, dependencies=[Depends(get_superuser_user),])
+app.include_router(
+    books,
+    dependencies=[
+        Depends(get_superuser_user),
+    ],
+)
+app.include_router(
+    autors,
+    dependencies=[
+        Depends(get_superuser_user),
+    ],
+)
+app.include_router(
+    genres,
+    dependencies=[
+        Depends(get_superuser_user),
+    ],
+)
+app.include_router(
+    books_genres,
+    dependencies=[
+        Depends(get_superuser_user),
+    ],
+)
 app.include_router(auth)
 app.include_router(users)
 

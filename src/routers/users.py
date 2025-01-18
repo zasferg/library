@@ -8,15 +8,18 @@ from src.crud.user_book import UserBookCrud
 from src.schemas.user_book import CreateBookUsersSchema
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.auth.helpers.check_user import get_active_user, get_superuser_user
+import logging
 
 
 users = APIRouter(
-    prefix="/users",
+    prefix="/api/users",
     tags=[
         "Users",
     ],
 )
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 @users.get("/all")
 async def get_all_users(
@@ -84,6 +87,9 @@ async def get_book(
 ):
     try:
         user_id = auth_data["user"].id
+
+        logger.info(f"Пользователь c ID {user_id} пытается удалить книгу {book_data.books}")
+
         get_book = await BookCrud.get_obj_by_param(
             session=session, name=book_data.books, offset=0, limit=10
         )
@@ -126,6 +132,9 @@ async def get_book(
             users=user_id,
             return_book_date=book_data.return_book_date,
         )
+
+        logger.info(f"Книга{book_data.books} успешно присвоена {user_id}")
+
         await BookCrud.update(
             session=session,
             record_id=get_book.id,
@@ -146,6 +155,8 @@ async def delete_book(
 
         user_id = auth_data["user"].id
 
+        logger.info(f"Пользователь с ID {user_id} пытается вернуть книгу {book_data}")
+
         get_book = await BookCrud.get_obj_by_param(
             session=session, name=book_data, offset=0, limit=10
         )
@@ -162,7 +173,7 @@ async def delete_book(
             record_id=get_book.id,
             avaliable_copies=get_book.avaliable_copies + 1,
         )
-
+        logger.info(f"Книга {book_data} вернута пользователем {user_id}")
         return JSONResponse(
             status_code=status.HTTP_200_OK,
             content={"details": "Sucessfully deleted"},

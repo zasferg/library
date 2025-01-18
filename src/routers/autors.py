@@ -6,9 +6,8 @@ from src.schemas.authors import *
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
-
 autors = APIRouter(
-    prefix="/api/autors",
+    prefix="/api/authors",
     tags=[
         "Authors",
     ],
@@ -62,6 +61,7 @@ async def create_author(
     data: CreateAuthorSchema, session: AsyncSession = Depends(get_session)
 ):
     try:
+        print(data)
         check_author = await AutorsCrud.get_obj_by_param(
             session=session, name=data.name
         )

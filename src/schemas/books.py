@@ -20,7 +20,7 @@ class GetBookSchema(BookSchema):
 
 
 class CreateBookSchema(BookSchema):
-    author: UUID
+    author: str
     genre: str
 
 

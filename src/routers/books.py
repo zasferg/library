@@ -58,7 +58,9 @@ async def create_book(
 ):
     try:
 
-        get_author = await AutorsCrud.get_by_id(session=session, id=book.author)
+        get_author = await AutorsCrud.get_obj_by_param(
+            session=session, name=book.author
+        )
         get_genre = await GenresCrud.get_obj_by_param(session=session, name=book.genre)
 
         if not get_genre:
@@ -76,7 +78,7 @@ async def create_book(
             name=book.name,
             description=book.description,
             avaliable_copies=book.avaliable_copies,
-            author_id=book.author,
+            author_id=get_author.id,
         )
         await BookGenreCrud.create(
             session=session, genres=get_genre.id, books=new_book.id

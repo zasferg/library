@@ -7,7 +7,7 @@ from src.schemas.base import BaseSchema
 class AuthorSchema(BaseSchema):
     name: Optional[str]
     biography: Optional[str]
-    birth_date: Optional[date]
+    birth_date: date
 
 
 class GetAuthorSchema(AuthorSchema):
